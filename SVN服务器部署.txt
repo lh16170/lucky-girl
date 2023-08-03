@@ -1,0 +1,83 @@
+SVN服务器搭建
+【相关连接】
+1.Linux (Ubuntu)安装svn
+	https://www.cnblogs.com/kxm87/p/9680050.html
+2.Linux (Ubuntu) 如何开启SSH远程登录
+	https://www.bilibili.com/video/BV1rz4y1R7DA/?spm_id_from=333.788.recommend_more_video.-1&vd_source=5a6cffd9add6553cbcc52442ecc22b55
+3.如何搭建svn服务器
+	https://www.bilibili.com/video/BV1ft41117Ro/?spm_id_from=333.337.search-card.all.click&vd_source=5a6cffd9add6553cbcc52442ecc22b55
+4.Linux -- Ubuntu 修改Home目录下的中文目录为英文（注意：在Ubuntu中运行指令）
+	https://songshuai0223.blog.csdn.net/article/details/121009575?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-121009575-blog-106744293.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-121009575-blog-106744293.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=3
+
+
+【SVN服务器】
+1.创建目录
+mkdir -p /opt/svn/repository
+2.创建版本库
+svnadmin create /opt/svn/repository
+3.切换目录
+cd /opt/svn/repository
+cd conf/
+4.修改authz、passwd、svnserve.conf三个文件
+	vim authz
+		[/]
+		admin = rw
+	vim passwd
+		admin = 123456
+	vim svnserve.conf
+		打开五个注释
+		anon-access = none
+		auth-access = write
+		password-db = passwd
+		authz-db = authz
+		realm = My First Repository
+5.关闭防火墙
+	/sbin/iptables -I INPUT -p tcp --dport 3690 -j ACCEPT
+	写入配置文件
+	/etc/init.d/iptables save
+		/etc/init.d/iptables: 没有那个文件或目录【未解决】
+        
+        
+
+【修改固定IP】
+https://www.bilibili.com/video/BV1CE411F74T/?spm_id_from=333.337.search-card.all.click&vd_source=5a6cffd9add6553cbcc52442ecc22b55
+【重启后操作】
+1. /sbin/iptables -I INPUT -p tcp --dport 3690 -j ACCEPT
+2.svnserve -d -r /opt/svn/repository
+3.ps -ef|grep 
+4.sudo netstat -ntlp
+
+
+【共享文件夹】
+cd /mnt/hgfs/share/C/02test/
+
+【Linux 创建共享文件夹给Windows】
+
+sudo /etc/init.d/smbd start
+
+ps -aux | grep smbd            //查看samba是否正在运行
+
+
+
+【添加环境变量】
+sudo vim /etc/profile
+export PATH=$PATH:/home/pclint/pclp/
+source /etc/profile
+
+【ll命令无法使用】
+vi ~/.bashrc
+alias ll='ls -l'
+souce ~/.bashrc
+
+【samba增加单个用户】
+1、配置/etc/samba/smb.conf
+2、groupadd liuhong -g 6000
+3、useradd liuhong -u 6000 -g 6000 -s /sbin/nologin -d /dev/null
+4、smbpasswd -a liuhong
+
+【samba增加多个用户】
+
+
+
+
+
